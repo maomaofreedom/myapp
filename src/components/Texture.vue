@@ -24,12 +24,6 @@
                     alert('Unable to initialize WebGL. Your browser or machine may not support it.');
                     return;
                 }
-
-                // Vertex shader program
-                // 建议 一般来说：
-                // vertex position : highp
-                // texture coordinate : mediump
-                // colors : lowp
                 const vsSource = 
                     'attribute vec4 a_Position;\n' +
                     'attribute vec2 a_TexCoord;\n' +
