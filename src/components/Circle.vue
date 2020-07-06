@@ -1,12 +1,18 @@
 <template>
-  <div>
-    <canvas id="cans" class="cans"></canvas>
+  <div id="cons">
   </div>
 </template>
 
 <script>
     export default {
         name: "Texture",
+        data(){
+            return {
+                width:500,
+                height:500,
+                scaleFactor:1
+            }
+        },
         mounted() {
             this.main()
         },
@@ -15,6 +21,17 @@
         },
         methods: {
             main() {
+                /**
+                 * 这个解决绘制出来的图形边界模糊的问题
+                 */
+                const canvas = document.createElement('canvas')
+                canvas.width = this.width * this.scaleFactor
+                canvas.height = this.height * this.scaleFactor
+                canvas.style.width = this.width + 'px'
+                canvas.style.height = this.height + 'px'
+                var gl=canvas.getContext('webgl',{ alpha:true,antialias: true, depth:true})
+                document.getElementById("cons").appendChild(canvas);
+
                 // vertex shader
                 var VERTEX_SHADER_SOURCE =
                     'attribute vec4 a_Position;\n' +
@@ -25,26 +42,25 @@
                 // fragment shader
                 var FRAGMENT_SHADER_SOURCE =
                     'void main() {\n' +
-                    '   gl_FragColor = vec4(1.0,0.0,0.0,1.0);\n' +
+                    '   gl_FragColor = vec4(0.2,1.0,1.0,1.0);\n' +
                     '}\n';
-
-                var canvas = document.getElementById("cans");
-                var gl = canvas.getContext('webgl');
-
                 if (!this.initShaderProgram(gl, VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE)) {
                     alert('Failed to init shaders');
                 }
 
 
-                var N = 400;
-                var vertexData = [0.0, 0.0];
-                var r = 0.5;
-
+                var N = 60;
+                var vertexData = [];
+                var r1 = 0.5;
+                var r2= 0.45
                 for (var i = 0; i <= N; i++) {
-                    var theta = i * 2 * Math.PI / N;
-                    var x = r * Math.sin(theta);
-                    var y = r * Math.cos(theta);
-                    vertexData.push(x, y);
+                    var theta = i * 1.5 * Math.PI / N;
+                    var x1 = r1 * Math.sin(theta);
+                    var y1 = r1 * Math.cos(theta);
+                    var x2 = r2 * Math.sin(theta);
+                    var y2= r2 * Math.cos(theta);
+
+                    vertexData.push(x1, y1,x2,y2);
                 }
 
                 var vertices = new Float32Array(vertexData);
@@ -52,7 +68,7 @@
 
                 gl.clearColor(0.0, 0.0, 0.0, 1.0);
                 gl.clear(gl.COLOR_BUFFER_BIT);
-                gl.drawArrays(gl.LINE_STRIP, 0, vertices.length / 2);
+                gl.drawArrays(gl.LINES, 0, vertices.length / 2);
 
 
             },
