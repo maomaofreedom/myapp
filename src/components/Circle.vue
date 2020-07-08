@@ -8,8 +8,8 @@
         name: "Texture",
         data(){
             return {
-                width:500,
-                height:500,
+                width:400,
+                height:400,
                 scaleFactor:1
             }
         },
@@ -31,6 +31,7 @@
                 canvas.style.height = this.height + 'px'
                 var gl=canvas.getContext('webgl',{ alpha:true,antialias: true, depth:true})
                 document.getElementById("cons").appendChild(canvas);
+
 
                 // vertex shader
                 var VERTEX_SHADER_SOURCE =
@@ -70,6 +71,33 @@
                 gl.clear(gl.COLOR_BUFFER_BIT);
                 gl.drawArrays(gl.LINES, 0, vertices.length / 2);
 
+                 var vertexAngData = [];
+                 var NN = 40;
+                var ra = 0.4;
+                vertexAngData.push(0,0)
+                for (var i = 20; i <= NN; i++) {
+                    var theta = i * 0.5 * Math.PI / NN;
+                    var x1 = ra * Math.sin(theta);
+                    var y1 = ra * Math.cos(theta);
+                    vertexAngData.push(x1, y1);
+                }
+                var verticesAng = new Float32Array(vertexAngData);
+                this.initVertexBuffers(gl, verticesAng);
+                gl.drawArrays(gl.TRIANGLE_FAN, 0, verticesAng.length / 2);
+
+                var vertexLineData = [];
+                var NNN = 100;
+                var rl = 0.55;
+                for (var i = 0; i <= NNN; i++) {
+                    var theta = i * 2 * Math.PI / NNN;
+                    var xl = rl * Math.sin(theta);
+                    var yl = rl * Math.cos(theta);
+                    vertexLineData.push(xl, yl);
+                }
+                var arra=vertexLineData.slice(50)
+                var verticesLine = new Float32Array(arra);
+                this.initVertexBuffers(gl, verticesLine);
+                gl.drawArrays(gl.LINE_STRIP, 0, verticesLine.length / 2);
 
             },
             initVertexBuffers(gl,vertices) {
