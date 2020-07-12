@@ -109,7 +109,7 @@
                     if(angle2==0){
                         angle2=360;
                     }
-                    angle1+=1;
+                    angle1+=2;
                     if(angle1>360){
                         angle1=0;
                     }
