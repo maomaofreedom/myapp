@@ -101,10 +101,33 @@
                 }
                 var verticesAng = new Float32Array(vertexAngData);
                 
+                /**
+                 * 绘制虚化的背景
+                 */
+                var vtBackGround=
+                '#version 100\n'+
+                'precision highp float;\n'+
+                'attribute vec3 position;\n'+
+                'void main() {\n'+
+                    'gl_Position = vec4(position, 1.0);\n'+
+                    'gl_PointSize = 256.0;\n'+
+                '}\n';
+
+                var fgBackGround=
+                '#version 100\n'+
+                'precision mediump float;\n'+
+                'void main() {\n'+
+                    'vec2 fragmentPosition = 2.0*gl_PointCoord - 1.0;\n'+
+                    'float distance = length(fragmentPosition);\n'+
+                    'float distanceSqrd = distance * distance;\n'+
+                    'gl_FragColor = vec4(0.2/distanceSqrd,0.1/distanceSqrd,0.0, 1.0 );\n'+
+                '}\n';
+
+
                 var angle1=0;
                 var angle2=360;
+
                 setInterval(()=>{
-                    var program1=this.initShaderProgram(gl, VERTEX_SHADER_SOURCE1, FRAGMENT_SHADER_SOURCE1);
                     angle2-=1;
                     if(angle2==0){
                         angle2=360;
@@ -118,9 +141,16 @@
 
                     var matrix2=new Mat4();
                     matrix2.setRotate(angle2,0,0,1);
+
                     gl.clearColor(0.0, 0.0, 0.0, 1.0);
                     gl.clear(gl.COLOR_BUFFER_BIT);
 
+                    var programBack=this.initShaderProgram(gl,vtBackGround,fgBackGround);
+                    var verticesBack = new Float32Array([0,0,0]);
+                    this.initVertexBuffers(gl,verticesBack,programBack,'position');
+                    gl.drawArrays(gl.POINTS, 0, 1);
+
+                    var program1=this.initShaderProgram(gl, VERTEX_SHADER_SOURCE1, FRAGMENT_SHADER_SOURCE1);
                     var u_ModelMatrix=gl.getUniformLocation(program1,'u_ModelMatrix');
                     gl.uniformMatrix4fv(u_ModelMatrix,false,matrix.elements);
                     this.initVertexBuffers(gl, vertices,program1,'a_Position1');
