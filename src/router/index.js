@@ -5,6 +5,7 @@ import WebGLDraw from '@/components/WebGLDraw'
 import Texture from '@/components/Texture'
 import Circle from "@/components/Circle"
 import Cube from "@/components/cesium/Cube"
+import Css from "@/components/css/Css"
 
 Vue.use(Router)
 
@@ -30,6 +31,10 @@ export default new Router({
       path:'/cube',
       name:'Cube',
       component:Cube
+    },{
+      path:'/css',
+      name:'Css',
+      component:Css
     }
   ]
 })

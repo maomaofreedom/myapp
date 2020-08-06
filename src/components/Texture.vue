@@ -17,8 +17,8 @@
         methods: {
             main() {
                 const canvas = document.getElementById('cans');
-                const gl = canvas.getContext('webgl');
-
+                const gl = canvas.getContext('webgl2');
+                debugger
                 // If we don't have a GL context, give up now
                 if (!gl) {
                     alert('Unable to initialize WebGL. Your browser or machine may not support it.');
@@ -133,9 +133,14 @@
                 gl.bindTexture(gl.TEXTURE_2D, texture);
 
                 // Set the texture parameters
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                //gl.texImage2D(gl.TEXTURE_2D, 2, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+                // gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+                // gl.generateMipmap(gl.TEXTURE_2D);
+                gl.texStorage2D(gl.TEXTURE_2D,1,gl.RGBA,256,256);
+                gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,gl.RGBA, gl.UNSIGNED_BYTE, image);
+                gl.generateMipmap(gl.TEXTURE_2D);
                 // Set the texture image
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
                 
                 // Set the texture unit 0 to the sampler
                 gl.uniform1i(u_Sampler, 0);
@@ -148,7 +153,7 @@
     }
 
 </script>
-
+https://hammerc.github.io/dou3d-ts/learning/learningNotes/lesson_4/index.html
 <style scoped>
   .cans {
     width: 100%;
