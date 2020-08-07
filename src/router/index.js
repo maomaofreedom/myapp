@@ -6,6 +6,7 @@ import Texture from '@/components/Texture'
 import Circle from "@/components/Circle"
 import Cube from "@/components/cesium/Cube"
 import Css from "@/components/css/Css"
+import Texture3d from "@/components/Texture3D"
 
 Vue.use(Router)
 
@@ -35,6 +36,10 @@ export default new Router({
       path:'/css',
       name:'Css',
       component:Css
+    }, {
+      path:'/texture3d',
+      name:'texture3d',
+      component:Texture3d
     }
   ]
 })
