@@ -138,6 +138,7 @@
                 return shader;
             },
             loadTexture(gl,n,texture,u_Sampler,image){
+
                  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
 
                 gl.activeTexture(gl.TEXTURE0);
