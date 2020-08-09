@@ -1,6 +1,7 @@
 <template>
   <div>
-    <canvas id="cans" class="cans"></canvas>
+    <div id="cons"></div>
+<!--    <canvas id="cans" class="cans"></canvas>-->
   </div>
 </template>
 
@@ -8,6 +9,13 @@
     import {mat4} from "gl-matrix"
     export default {
         name: "Texture",
+        data(){
+            return{
+                width:500,
+                height:500,
+                scaleFactor:1
+            }
+        },
         mounted() {
             this.main()
         },
@@ -16,15 +24,21 @@
         },
         methods: {
             main() {
-                const canvas = document.getElementById('cans');
-                const gl = canvas.getContext('webgl2');
-                debugger
+                const canvas = document.createElement('canvas')
+                canvas.width = this.width * this.scaleFactor
+                canvas.height = this.height * this.scaleFactor
+                canvas.style.width = this.width + 'px'
+                canvas.style.height = this.height + 'px'
+                const gl=canvas.getContext('webgl',{ alpha:true,antialias: true, depth:true})
+                document.getElementById("cons").appendChild(canvas);
+                // const canvas = document.getElementById('cans');
+                // const gl = canvas.getContext('webgl2');
                 // If we don't have a GL context, give up now
                 if (!gl) {
                     alert('Unable to initialize WebGL. Your browser or machine may not support it.');
                     return;
                 }
-                const vsSource = 
+                const vsSource =
                     'attribute vec4 a_Position;\n' +
                     'attribute vec2 a_TexCoord;\n' +
                     'varying vec2 v_TexCoord;\n' +
@@ -34,7 +48,7 @@
                     '}\n';
 
                 // Fragment shader program
-                const fsSource = 
+                const fsSource =
                     '#ifdef GL_ES\n' +
                     'precision mediump float;\n' +
                     '#endif\n' +
@@ -63,10 +77,10 @@
             },
             initVertexBuffers(gl,shaderProgram) {
                 let vertexTexCoords=new Float32Array([
-                    -0.25,0.5,0.0,1.0,
-                    -0.25,-0.5,0.0,0.0,
-                    0.25,0.5,1.0,1.0,
-                    0.25,-0.5,1.0,0.0
+                    -0.5,0.5,0.0,1.0,
+                    -0.5,-0.5,0.0,0.0,
+                    0.5,0.5,1.0,1.0,
+                    0.5,-0.5,1.0,0.0
                 ]);
                 let n=4;
                 const vertexTexCoordBuffer=gl.createBuffer();
@@ -81,9 +95,7 @@
                 gl.enableVertexAttribArray(a_TexCoord);
                 return n;
             },
-            //
-            // Initialize a shader program, so WebGL knows how to draw our data
-            //
+
             initShaderProgram(gl, vsSource, fsSource) {
                 const vertexShader = this.loadShader(gl, gl.VERTEX_SHADER, vsSource);
                 const fragmentShader = this.loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
@@ -127,27 +139,19 @@
             },
             loadTexture(gl,n,texture,u_Sampler,image){
                  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
-                // Enable texture unit0
+
                 gl.activeTexture(gl.TEXTURE0);
-                // Bind the texture object to the target
+
                 gl.bindTexture(gl.TEXTURE_2D, texture);
 
-                // Set the texture parameters
-                // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-                //gl.texImage2D(gl.TEXTURE_2D, 2, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-                // gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-                // gl.generateMipmap(gl.TEXTURE_2D);
-                gl.texStorage2D(gl.TEXTURE_2D,1,gl.RGBA,256,256);
-                gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,gl.RGBA, gl.UNSIGNED_BYTE, image);
-                gl.generateMipmap(gl.TEXTURE_2D);
-                // Set the texture image
-                
-                // Set the texture unit 0 to the sampler
-                gl.uniform1i(u_Sampler, 0);
-                
-                gl.clear(gl.COLOR_BUFFER_BIT);   // Clear <canvas>
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 
-                gl.drawArrays(gl.TRIANGLE_STRIP, 0, n); // Draw the rectangle
+                gl.uniform1i(u_Sampler, 0);
+
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
             }
         }
     }
@@ -156,7 +160,7 @@
 https://hammerc.github.io/dou3d-ts/learning/learningNotes/lesson_4/index.html
 <style scoped>
   .cans {
-    width: 100%;
-    height: 100%;
+    width: 500px;
+    height: 500px;
   }
 </style>

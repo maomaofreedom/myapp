@@ -1,11 +1,13 @@
 <template>
   <div>
-    <canvas id="cans" class="cans"></canvas>
+    <canvas id="cans" style="width: 500px" height="500px"></canvas>
   </div>
 </template>
 
 <script>
     import {mat4} from "gl-matrix"
+    const WebGLDebugUtils=require("webgl-debug")
+    const WebGLUtils=require("./webgl-utils")
     export default {
         name: "Texture",
         data() {
@@ -271,7 +273,7 @@
             },
             setupTextures() {
                 this.pwgl.woodTexture = this.gl.createTexture();
-                this.loadImageForTexture("./static/swood_128x128.jpg", this.pwgl.woodTexture);
+                this.loadImageForTexture("./static/wood_128x128.jpg", this.pwgl.woodTexture);
 
                 this.pwgl.groundTexture = this.gl.createTexture();
                 this.loadImageForTexture("./static/wood_floor_256.jpg", this.pwgl.groundTexture);
@@ -347,13 +349,47 @@
                 this.popModelViewMatrix();
 
                 // 开启动画帧循环
-                this.pwgl.requestId = requestAnimationFrame(this.draw, this.canvas);
+                this.pwgl.requestId = requestAnimFrame(this.draw, this.canvas);
             },
             uploadModelViewMatrixToShader() {
-                this.gl.uniformMatrix4fv(this.pwgl.uniformMVMatrixLoc, false, this.pwgl.modelViewMatrix);
+                let aa=new Float32Array([this.pwgl.modelViewMatrix['0'],
+                    this.pwgl.modelViewMatrix['1'],
+                    this.pwgl.modelViewMatrix['2'],
+                    this.pwgl.modelViewMatrix['3'],
+                    this.pwgl.modelViewMatrix['4'],
+                    this.pwgl.modelViewMatrix['5'],
+                    this.pwgl.modelViewMatrix['6'],
+                    this.pwgl.modelViewMatrix['7'],
+                    this.pwgl.modelViewMatrix['8'],
+                    this.pwgl.modelViewMatrix['9'],
+                    this.pwgl.modelViewMatrix['10'],
+                    this.pwgl.modelViewMatrix['11'],
+                    this.pwgl.modelViewMatrix['12'],
+                    this.pwgl.modelViewMatrix['13'],
+                    this.pwgl.modelViewMatrix['14'],
+                    this.pwgl.modelViewMatrix['15']]);
+                this.gl.uniformMatrix4fv(this.pwgl.uniformMVMatrixLoc, false, aa);
             },
             uploadProjectionMatrixToShader() {
-                this.gl.uniformMatrix4fv(this.pwgl.uniformProjMatrixLoc, false, this.pwgl.projectionMatrix);
+                let aa=new Float32Array([
+                    this.pwgl.projectionMatrix['0'],
+                    this.pwgl.projectionMatrix['1'],
+                    this.pwgl.projectionMatrix['2'],
+                    this.pwgl.projectionMatrix['3'],
+                    this.pwgl.projectionMatrix['4'],
+                    this.pwgl.projectionMatrix['5'],
+                    this.pwgl.projectionMatrix['6'],
+                    this.pwgl.projectionMatrix['7'],
+                    this.pwgl.projectionMatrix['8'],
+                    this.pwgl.projectionMatrix['9'],
+                    this.pwgl.projectionMatrix['10'],
+                    this.pwgl.projectionMatrix['11'],
+                    this.pwgl.projectionMatrix['12'],
+                    this.pwgl.projectionMatrix['13'],
+                    this.pwgl.projectionMatrix['14'],
+                    this.pwgl.projectionMatrix['15']
+                ])
+                this.gl.uniformMatrix4fv(this.pwgl.uniformProjMatrixLoc, false,aa );
             },
 
             // 将 modelViewMatrix 矩阵压入堆栈
@@ -427,7 +463,7 @@
                 event.preventDefault();
 
                 // 取消动画帧循环
-                cancelRequestAnimationFrame(this.pwgl.requestId);
+                cancelRequestAnimFrame(this.pwgl.requestId);
 
                 // 取消所有的加载事件
                 for (var i = 0; i < this.pwgl.ongoingImageLoads.length; i++) {
@@ -444,11 +480,11 @@
                 this.gl.clearColor(1.0, 1.0, 1.0, 1.0);
                 this.gl.enable(this.gl.DEPTH_TEST);
                 // 开启动画帧循环
-                this.pwgl.requestId = requestAnimationFrame(this.draw, this.canvas);
+                this.pwgl.requestId = requestAnimFrame(this.draw, this.canvas);
             },
             startup() {
                 this.canvas = document.getElementById("cans");
-                //this.canvas = WebGLDebugUtils.makeLostContextSimulatingCanvas(this.canvas);
+                this.canvas = WebGLDebugUtils.makeLostContextSimulatingCanvas(this.canvas);
                 this.canvas.addEventListener('webglcontextlost', this.handleContextLost, false);
                 this.canvas.addEventListener('webglcontextrestored', this.handleContextRestored, false);
 
@@ -466,9 +502,4 @@
 
 </script>
 <style scoped>
-  .cans {
-    width: 500px;
-    height: 500px;
-  }
-
 </style>
