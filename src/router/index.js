@@ -7,6 +7,7 @@ import Circle from "@/components/Circle"
 import Cube from "@/components/cesium/Cube"
 import Css from "@/components/css/Css"
 import Texture3d from "@/components/Texture3D"
+import Fan from "@/components/ol/Fan"
 
 Vue.use(Router)
 
@@ -40,6 +41,10 @@ export default new Router({
       path:'/texture3d',
       name:'texture3d',
       component:Texture3d
+    },{
+      path:'/fans',
+      name:'fan',
+      component:Fan
     }
   ]
 })
