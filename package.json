@@ -10,10 +10,13 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "cesium": "^1.68.0",
+    "cesium": "^1.71.0",
+    "cuon-matrix-ts": "^1.1.0",
     "gl-matrix": "^3.3.0",
+    "ol": "^6.4.3",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "webgl-debug": "^2.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
