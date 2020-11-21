@@ -8,9 +8,9 @@
         name: "Texture",
         data(){
             return {
-                width:400,
-                height:400,
-                scaleFactor:1
+                width:500,
+                height:500,
+                scaleFactor:2
             }
         },
         mounted() {
